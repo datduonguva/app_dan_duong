@@ -104,7 +104,6 @@ class ObjectDetectorHelper(
 
     fun detect(image: Bitmap, imageRotation: Int) {
 
-        val allowed_objects =
         if (objectDetector == null) {
             setupObjectDetector()
         }
@@ -152,14 +151,6 @@ class ObjectDetectorHelper(
         const val MODEL_EFFICIENTDETV1 = 2
         const val MODEL_EFFICIENTDETV2 = 3
 
-        const val OBJECT_PERSON = 0
-        const val OBJECT_BICYCLE = 1
-        const val OBJECT_CAR = 2
-        const val OBJECT_MOTORCYCLE = 3
-        const val OBJECT_BUS = 5
-        const val OBJECT_TRAIN = 6
-        const val OBJECT_TRUCK = 7
-        const val OBJECT_TRAFFICT_LIGHT = 9
 
     }
 }

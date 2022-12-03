@@ -39,6 +39,19 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
     private var scaleFactor: Float = 1f
 
     private var bounds = Rect()
+    private var vietnameseMap = mapOf(
+        0 to "Nguoi",
+        1 to "Xe Dap",
+        2 to "Xe Oto",
+        3 to "Xe May",
+        5 to "Xe Buyt",
+        6 to "Tau Hoa",
+        7 to "Xe Tai",
+        9 to "Den Giao Thong",
+        16 to "Dong vat: Meo",
+        17 to "Dong vat: Cho",
+        20 to "Dong vat: Bo"
+    )
 
     init {
         initPaints()
@@ -69,7 +82,11 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
 
+
         for (result in results) {
+            if (!vietnameseMap.containsKey(result.categories[0].index )){
+                continue
+            }
             val boundingBox = result.boundingBox
 
             val top = boundingBox.top * scaleFactor
@@ -82,12 +99,13 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
             canvas.drawRect(drawableRect, boxPaint)
 
             // Create text to display alongside detected objects
-            val drawableText =
-                result.categories[0].label + " " +
-                        String.format("%.2f", result.categories[0].score)
+
+            val drawableText = vietnameseMap.get(result.categories[0].index)
+//                result.categories[0].label + " " +
+//                        String.format("%.2f", result.categories[0].score)
 
             // Draw rect behind display text
-            textBackgroundPaint.getTextBounds(drawableText, 0, drawableText.length, bounds)
+            textBackgroundPaint.getTextBounds(drawableText, 0, drawableText!!.length, bounds)
             val textWidth = bounds.width()
             val textHeight = bounds.height()
             canvas.drawRect(
@@ -99,7 +117,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
             )
 
             // Draw text for detected object
-            canvas.drawText(drawableText, left, top + bounds.height(), textPaint)
+            canvas.drawText(drawableText!!, left, top + bounds.height(), textPaint)
         }
     }
 
