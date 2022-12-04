@@ -40,7 +40,20 @@ class ObjectDetectorHelper(
     // For this example this needs to be a var so it can be reset on changes. If the ObjectDetector
     // will not change, a lazy val would be preferable.
     private var objectDetector: ObjectDetector? = null
-
+    private var lastTime: Long = 0L
+    private var vietnameseMap = mapOf(
+        0 to "Nguoi",
+        1 to "Xe Dap",
+        2 to "Xe Oto",
+        3 to "Xe May",
+        5 to "Xe Buyt",
+        6 to "Tau Hoa",
+        7 to "Xe Tai",
+        9 to "Den Giao Thong",
+        16 to "Dong vat: Meo",
+        17 to "Dong vat: Cho",
+        20 to "Dong vat: Bo"
+    )
     init {
         setupObjectDetector()
     }
@@ -124,6 +137,13 @@ class ObjectDetectorHelper(
         val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))
 
         val results = objectDetector?.detect(tensorImage)
+        if ((lastTime == 0L) || (System.currentTimeMillis() - lastTime > 3000L)){
+            lastTime = System.currentTimeMillis()
+            val allIndices = results!!.map {it -> it.categories[0].index}
+            val validIndices = allIndices.filter {it -> vietnameseMap.containsKey(it)}
+
+            PlayNameSound(validIndices, context).run()
+        }
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
         objectDetectorListener?.onResults(
             results,

@@ -37,6 +37,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
     private var textPaint = Paint()
 
     private var scaleFactor: Float = 1f
+    private var lastTime: Long = 0
 
     private var bounds = Rect()
     private var vietnameseMap = mapOf(
@@ -83,6 +84,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         super.draw(canvas)
 
 
+
         for (result in results) {
             if (!vietnameseMap.containsKey(result.categories[0].index )){
                 continue
@@ -101,8 +103,6 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
             // Create text to display alongside detected objects
 
             val drawableText = vietnameseMap.get(result.categories[0].index)
-//                result.categories[0].label + " " +
-//                        String.format("%.2f", result.categories[0].score)
 
             // Draw rect behind display text
             textBackgroundPaint.getTextBounds(drawableText, 0, drawableText!!.length, bounds)
@@ -127,6 +127,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
       imageWidth: Int,
     ) {
         results = detectionResults
+
 
         // PreviewView is in FILL_START mode. So we need to scale up the bounding box to match with
         // the size that the captured images will be displayed.
